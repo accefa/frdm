@@ -38,6 +38,9 @@
 #include "RxBuf.h"
 #include "RxBuf.h"
 #include "CS1.h"
+#include "WAIT1.h"
+#include "Input.h"
+#include "CS2.h"
 
 #ifdef __cplusplus
 extern "C" {
