@@ -38,6 +38,7 @@
 #include "LED2.h"
 #include "LEDpin2.h"
 #include "BitIoLdd2.h"
+#include "TU1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -55,11 +56,22 @@ static void Task1(void *pvParameters)
 
 }
 
+static void Task2(void *pvParameters)
+{
+	(void)pvParameters;
+	while (1) {
+		LED2_Neg();
+		FRTOS1_vTaskDelay(500/portTICK_RATE_MS);
+	}
+}
+
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
 {
   /* Write your local variable definition here */
+	xTaskHandle A;
+	xTaskHandle B;
 
   /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
   PE_low_level_init();
@@ -74,11 +86,24 @@ int main(void)
 		  configMINIMAL_STACK_SIZE,
 		  (void*)NULL,
 		  tskIDLE_PRIORITY,
-		  (xTaskHandle*)NULL
+		  &A
   	  ) != pdPASS) {
 	  while (1) {
 		  // out of heap?
 	  }
+  }
+
+  if (FRTOS1_xTaskCreate(
+  		  Task2,
+  		  (signed portCHAR *)"Task2",
+  		  configMINIMAL_STACK_SIZE,
+  		  (void*)NULL,
+  		  tskIDLE_PRIORITY,
+  		  &B
+  		  ) != pdPASS) {
+  	  while (1) {
+
+  	  }
   }
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
