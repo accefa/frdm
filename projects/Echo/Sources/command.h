@@ -10,7 +10,7 @@
 #define MENU_CMD_ROTATOR	"rotator"
 #define MENU_CMD_SHOOTER	"shooter"
 #define MENU_CMD_LOADER		"loader"
-#define MENU_CMD_SETRPM		"rpm"
+#define MENU_CMD_SETRPM		"setrpm"
 #define MENU_CMD_FIRE		"fire"
 #define MENU_CMD_RESET		"reset"
 
@@ -29,5 +29,7 @@ typedef enum {
 
 int check_command(unsigned char *input);
 void get_command_name(unsigned char *output, unsigned char *input);
+
+void run_command(int command, unsigned char *answer, ...);
 
 #endif /* COMMAND_H */

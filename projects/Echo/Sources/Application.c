@@ -43,7 +43,7 @@ void APP_Run(void) {
 
 	Init();
 
-	SendString((unsigned char*)"Hello World\r\n", &deviceData);
+	SendString((unsigned char*)"ACCEFA\r\n", &deviceData);
 
 	while (1) {
 		if (RxBuf_NofElements() != 0) {
@@ -52,7 +52,7 @@ void APP_Run(void) {
 			while (RxBuf_NofElements() != 0) {
 				// unsigned char ch;
 				(void)RxBuf_Get(&ch);
-				// SendChar(ch, &deviceData);
+				SendChar(ch, &deviceData);
 				input[pos] = ch;
 				pos++;
 			}
@@ -60,7 +60,10 @@ void APP_Run(void) {
 			pos = 0;
 			SendChar('\n', &deviceData);
 			get_command_name(output, input);
+			// SendString(output, &deviceData);
+			run_command(check_command(input), output);
 			SendString(output, &deviceData);
+			SendChar((unsigned char)'\n', &deviceData);
 		}
 	}
 }
