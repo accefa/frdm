@@ -177,7 +177,43 @@ void Cpu_OnSupervisorCall(void)
 /* ===================================================================*/
 void Cpu_OnPendableService(void)
 {
-	vPortPendSVCHandler();
+	vPortPendSVHandler();
+}
+
+/*
+** ===================================================================
+**     Event       :  CLS1_OnBeforeIterateCmd (module Events)
+**
+**     Component   :  CLS1 [Shell]
+**     Description :
+**         Hook called before parsing a command in IterateTable().
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         cmd             - command parsed
+**     Returns     : Nothing
+** ===================================================================
+*/
+void CLS1_OnBeforeIterateCmd(const uint8_t *cmd)
+{
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  CLS1_OnAfterIterateCmd (module Events)
+**
+**     Component   :  CLS1 [Shell]
+**     Description :
+**         Hook called after parsing a command in IterateTable().
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         cmd             - command parsed
+**     Returns     : Nothing
+** ===================================================================
+*/
+void CLS1_OnAfterIterateCmd(const uint8_t *cmd)
+{
+  /* Write your code here ... */
 }
 
 /* END Events */

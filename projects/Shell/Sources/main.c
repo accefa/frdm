@@ -39,12 +39,20 @@
 #include "LEDpin2.h"
 #include "BitIoLdd2.h"
 #include "TU1.h"
+#include "CLS1.h"
+#include "WAIT1.h"
+#include "CS1.h"
+#include "AS1.h"
+#include "ASerialLdd1.h"
+#include "RxBuf1.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
 #include "PE_Const.h"
 #include "IO_Map.h"
 /* User includes (#include below this line is not maintained by Processor Expert) */
+
+#include "Shell.h"
 
 static void Task1(void *pvParameters)
 {
@@ -86,7 +94,7 @@ int main(void)
 		  configMINIMAL_STACK_SIZE,
 		  (void*)NULL,
 		  tskIDLE_PRIORITY,
-		  &A
+		  (xTaskHandle*)NULL
   	  ) != pdPASS) {
 	  while (1) {
 		  // out of heap?
@@ -99,12 +107,14 @@ int main(void)
   		  configMINIMAL_STACK_SIZE,
   		  (void*)NULL,
   		  tskIDLE_PRIORITY,
-  		  &B
-  		  ) != pdPASS) {
+  		  (xTaskHandle*)NULL
+    	  ) != pdPASS) {
   	  while (1) {
-
+  		  // out of heap?
   	  }
-  }
+    }
+
+  SHELL_Init();
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/

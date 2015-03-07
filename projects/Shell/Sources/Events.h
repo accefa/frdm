@@ -43,6 +43,12 @@
 #include "LEDpin2.h"
 #include "BitIoLdd2.h"
 #include "TU1.h"
+#include "CLS1.h"
+#include "WAIT1.h"
+#include "CS1.h"
+#include "AS1.h"
+#include "ASerialLdd1.h"
+#include "RxBuf1.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -152,6 +158,36 @@ void Cpu_OnSupervisorCall(void);
 */
 /* ===================================================================*/
 void Cpu_OnPendableService(void);
+
+void CLS1_OnBeforeIterateCmd(const uint8_t *cmd);
+/*
+** ===================================================================
+**     Event       :  CLS1_OnBeforeIterateCmd (module Events)
+**
+**     Component   :  CLS1 [Shell]
+**     Description :
+**         Hook called before parsing a command in IterateTable().
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         cmd             - command parsed
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void CLS1_OnAfterIterateCmd(const uint8_t *cmd);
+/*
+** ===================================================================
+**     Event       :  CLS1_OnAfterIterateCmd (module Events)
+**
+**     Component   :  CLS1 [Shell]
+**     Description :
+**         Hook called after parsing a command in IterateTable().
+**     Parameters  :
+**         NAME            - DESCRIPTION
+**         cmd             - command parsed
+**     Returns     : Nothing
+** ===================================================================
+*/
 
 /* END Events */
 
