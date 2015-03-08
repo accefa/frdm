@@ -35,7 +35,7 @@ static void BLDC_set_enable(bool status);
 static void BLDC_set_rpm(int rpm);
 static int get_pwm_ratio(int rpm);
 static void BLDC_reset(void);
-static void BLDC_init(void);
+static void BLDC_init(const CLS1_StdIOType *io);
 
 static int BLDC_enable = 0;
 static int BLDC_rpm = 0;
@@ -104,7 +104,7 @@ byte BLDC_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIO
 	  }
   } else if (UTIL1_strcmp((char*)cmd, "BLDC init") == 0) {
 	  *handled = TRUE;
-	  BLDC_init();
+	  BLDC_init(io);
   }
   return ERR_OK;
 }
@@ -136,16 +136,24 @@ static void BLDC_set_rpm(int rpm)
 	BLDC_PWM_ratio = get_pwm_ratio(rpm);
 }
 
-static void BLDC_init(void)
+static void BLDC_init(const CLS1_StdIOType *io)
 {
 	int i = 0;
+	unsigned char message[32] = { '\0' };
+
 	set_status(STATUS_BUSY);
+
+	CLS1_SendStr((unsigned char*)"initializing BLDC ...\r\n", io->stdOut);
 	for (i = 0; i < 1.5*BLDC_RPM_MAX; i+=100) {
 		WAIT1_Waitms(10);
+		// sprintf(message, "PWM ratio = %i\r\n", BLDC_PWM_ratio);
+		// CLS1_SendStr((unsigned char*)message, io->stdOut);
 		BLDC_PWM_ratio = get_pwm_ratio(i) - BLDC_PWM_MIN;
 	}
 	BLDC_PWM_ratio = get_pwm_ratio(BLDC_RPM_MIN);
+
 	set_status(STATUS_OK);
+
 	BLDC_reset();
 }
 
