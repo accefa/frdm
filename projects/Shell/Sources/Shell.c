@@ -8,14 +8,24 @@
 #include "FRTOS1.h"
 #include "Shell.h"
 #include "CLS1.h"
-#include "LED1.h"
-#include "LED2.h"
+#include "LED_red.h"
+#include "LED_green.h"
+#include "LED_blue.h"
+#include "Error.h"
+#include "BLDC.h"
+#include "WAIT1.h"
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
 		CLS1_ParseCommand,
 #if LED1_PARSE_COMMAND_ENABLED
 		LED1_ParseCommand,
+#endif
+#if LED2_PARSE_COMMAND_ENABLED
+		LED2_ParseCommand,
+#endif
+#if BLDC_PARSE_COMMAND_ENABLED
+		BLDC_ParseCommand,
 #endif
 		NULL
 };
@@ -30,13 +40,14 @@ static void ShellTask(void *pvParameters)
 
 	while (1) {
 		(void)CLS1_ReadAndParseWithCommandTable(buf, sizeof(buf), CLS1_GetStdio(), CmdParserTable);
-		FRTOS1_vTaskDelay(50/portTICK_RATE_MS);
-		LED1_Neg();
+		// FRTOS1_vTaskDelay(50/portTICK_RATE_MS);
 	}
 }
 
 void SHELL_Init(void)
 {
+	set_status(STATUS_BUSY);
+	WAIT1_Waitms(1000);
 	CLS1_Init();
 	if (FRTOS1_xTaskCreate(
 			ShellTask,
@@ -46,7 +57,8 @@ void SHELL_Init(void)
 			tskIDLE_PRIORITY,
 			NULL ) != pdPASS) {
 		while (1) {
-			// out of heap?
+			set_status(STATUS_ERROR);
 		}
 	}
+	set_status(STATUS_OK);
 }

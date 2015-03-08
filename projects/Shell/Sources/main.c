@@ -32,10 +32,13 @@
 #include "Events.h"
 #include "FRTOS1.h"
 #include "UTIL1.h"
-#include "LED1.h"
+#include "LED_green.h"
 #include "LEDpin1.h"
 #include "BitIoLdd1.h"
-#include "LED2.h"
+#include "LED_blue.h"
+#include "LEDpin3.h"
+#include "BitIoLdd3.h"
+#include "LED_red.h"
 #include "LEDpin2.h"
 #include "BitIoLdd2.h"
 #include "TU1.h"
@@ -45,6 +48,8 @@
 #include "AS1.h"
 #include "ASerialLdd1.h"
 #include "RxBuf1.h"
+#include "PWM1.h"
+#include "PwmLdd2.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -53,12 +58,14 @@
 /* User includes (#include below this line is not maintained by Processor Expert) */
 
 #include "Shell.h"
+#include "Error.h"
+#include "BLDC.h"
 
 static void Task1(void *pvParameters)
 {
 	(void)pvParameters;
 	while (1) {
-		LED1_Neg();
+		LED_green_Neg();
 		FRTOS1_vTaskDelay(1000/portTICK_RATE_MS);
 	}
 
@@ -68,7 +75,7 @@ static void Task2(void *pvParameters)
 {
 	(void)pvParameters;
 	while (1) {
-		LED2_Neg();
+		LED_red_Neg();
 		FRTOS1_vTaskDelay(500/portTICK_RATE_MS);
 	}
 }
@@ -88,6 +95,7 @@ int main(void)
   /* Write your code here */
   /* For example: for(;;) { } */
 
+  /*
   if (FRTOS1_xTaskCreate(
 		  Task1,
 		  (signed portCHAR *)"Task1",
@@ -100,10 +108,14 @@ int main(void)
 		  // out of heap?
 	  }
   }
+  */
+
+  set_status(STATUS_RESET);
+  SHELL_Init();
 
   if (FRTOS1_xTaskCreate(
-  		  Task2,
-  		  (signed portCHAR *)"Task2",
+  		  BLDC_update_task,
+  		  (signed portCHAR *)"BLDC",
   		  configMINIMAL_STACK_SIZE,
   		  (void*)NULL,
   		  tskIDLE_PRIORITY,
@@ -112,9 +124,7 @@ int main(void)
   	  while (1) {
   		  // out of heap?
   	  }
-    }
-
-  SHELL_Init();
+  }
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
   /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/

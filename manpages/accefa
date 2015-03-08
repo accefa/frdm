@@ -1,0 +1,25 @@
+.\" Manpage for accefa.
+.\* Contact nino.ninux@gmail.com to correct errors or typos.
+.TH accefa 1 "08 March 2015" "1.0" "accefa man page"
+.SH NAME
+accefa \- control the frdm board on the ACCEFA machine
+.SH SYNOPSIS
+.B accefa
+.RB [-d \fIDEVICE\fR]
+.RB [-b \fIBAUDRATE\fR] [-t]
+.SH DESCRIPTION
+accefa is a low level command line interface to the ACCEFA machine.
+It allows control of all the peripherals of the machine, like the
+shooter, loader and rotator.
+.SH OPTIONS
+.TP
+.BR \-d ", " \-\-device = DEVICE
+Set the device (see \fIdmesg\fR). The default is \fI/dev/ttyACM0\fR.
+.TP
+.BR \-b ", " \-\-baudrate = BAUDRATE
+Set the baudrate. The default is \fI38400\fR.
+.TP
+.BR \-t ", " \-\-test
+Runs a quick test on the device and closes the program.
+.SH COMMANDS
+

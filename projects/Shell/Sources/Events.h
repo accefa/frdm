@@ -36,10 +36,13 @@
 #include "IO_Map.h"
 #include "FRTOS1.h"
 #include "UTIL1.h"
-#include "LED1.h"
+#include "LED_green.h"
 #include "LEDpin1.h"
 #include "BitIoLdd1.h"
-#include "LED2.h"
+#include "LED_blue.h"
+#include "LEDpin3.h"
+#include "BitIoLdd3.h"
+#include "LED_red.h"
 #include "LEDpin2.h"
 #include "BitIoLdd2.h"
 #include "TU1.h"
@@ -49,6 +52,8 @@
 #include "AS1.h"
 #include "ASerialLdd1.h"
 #include "RxBuf1.h"
+#include "PWM1.h"
+#include "PwmLdd2.h"
 
 #ifdef __cplusplus
 extern "C" {
