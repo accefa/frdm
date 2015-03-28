@@ -2,7 +2,7 @@
  * BLDC.c
  *
  *  Created on: Mar 7, 2015
- *      Author: Nino
+ *      Author: Ninux
  */
 
 /* Include shared modules, which are used for whole project */
@@ -41,72 +41,106 @@ static int BLDC_enable = 0;
 static int BLDC_rpm = 0;
 static int BLDC_PWM_ratio = 0;
 
-static uint8_t PrintStatus(const CLS1_StdIOType *io) {
-  unsigned char rpm_message[12] = { '\0' };
-  CLS1_SendStatusStr((unsigned char*)"BLDC", (unsigned char*)"\r\n", io->stdOut);
-  if (BLDC_get_enable()!=0) {
-    CLS1_SendStatusStr((unsigned char*)"  on", (unsigned char*)"yes\r\n", io->stdOut);
-  } else {
-    CLS1_SendStatusStr((unsigned char*)"  on", (unsigned char*)"no\r\n", io->stdOut);
-  }
-  sprintf(rpm_message, "%i\r\n", BLDC_rpm);
-  CLS1_SendStatusStr((unsigned char*)"  RPM", (unsigned char*)rpm_message, io->stdOut);
-  return ERR_OK;
-}
-
-static uint8_t PrintHelp(const CLS1_StdIOType *io) {
-  CLS1_SendHelpStr((unsigned char*)"BLDC", (unsigned char*)"Group of BLDC commands\r\n", io->stdOut);
-  CLS1_SendHelpStr((unsigned char*)"  help|status", (unsigned char*)"Print help or status information\r\n", io->stdOut);
-  CLS1_SendHelpStr((unsigned char*)"  on|off", (unsigned char*)"Turns it on or off\r\n", io->stdOut);
-  CLS1_SendHelpStr((unsigned char*)"  setrpm n", (unsigned char*)"Sets RPM to n\r\n", io->stdOut);
-  CLS1_SendHelpStr((unsigned char*)"  reset", (unsigned char*)"Reset to initial setup n\r\n", io->stdOut);
-  CLS1_SendHelpStr((unsigned char*)"  init", (unsigned char*)"Initialize motor-control n\r\n", io->stdOut);
-  return ERR_OK;
-}
-
-byte BLDC_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io)
+static uint8_t PrintStatus(const CLS1_StdIOType *io)
 {
-  uint8_t res = ERR_OK;
-  unsigned char message[64] = { '\0'};
-  int32_t val;
-  const unsigned char *p;
+	unsigned char rpm_message[12] = { '\0' };
+	CLS1_SendStatusStr((unsigned char*)"BLDC",
+			   (unsigned char*)"\r\n", io->stdOut);
 
-  if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP)==0 || UTIL1_strcmp((char*)cmd, "BLDC help")==0) {
-    *handled = TRUE;
-    return PrintHelp(io);
-  } else if ((UTIL1_strcmp((char*)cmd, CLS1_CMD_STATUS)==0) || (UTIL1_strcmp((char*)cmd, "BLDC status")==0)) {
-    *handled = TRUE;
-    return PrintStatus(io);
-  } else if (UTIL1_strcmp((char*)cmd, "BLDC on") == 0) {
-    *handled = TRUE;
-    BLDC_set_enable(1);
-    return ERR_OK;
-  } else if (UTIL1_strcmp((char*)cmd, "BLDC off") == 0) {
-    *handled = TRUE;
-    BLDC_set_enable(0);
-    return ERR_OK;
-  } else if (UTIL1_strcmp((char*)cmd, "BLDC reset") == 0) {
-	  *handled = TRUE;
-	  BLDC_reset();
-  } else if (UTIL1_strncmp((char*)cmd, "BLDC setrpm ", sizeof("BLDC setrpm")-1) == 0) {
-	  if (!BLDC_enable) {
-		  CLS1_SendStr((unsigned char*)"BLDC is off, cannot set RPM\r\n", io->stdErr);
-		  res = ERR_FAILED;
-	  } else {
-		  p = cmd+sizeof("BLDC setrpm");
-		  if (UTIL1_xatoi(&p, &val) == ERR_OK && val >= BLDC_RPM_MIN && val <= BLDC_RPM_MAX) {
-			  BLDC_set_rpm(val);
-			  *handled = TRUE;
-		  } else {
-			  sprintf(message, "Wrong argument, must be in range %i to %i", BLDC_RPM_MIN, BLDC_RPM_MAX);
-			  CLS1_SendStr((unsigned char*)message, io->stdErr);
-		  }
-	  }
-  } else if (UTIL1_strcmp((char*)cmd, "BLDC init") == 0) {
-	  *handled = TRUE;
-	  BLDC_init(io);
-  }
-  return ERR_OK;
+	if (BLDC_get_enable()!=0) {
+		CLS1_SendStatusStr((unsigned char*)"  on",
+				   (unsigned char*)"yes\r\n",
+				   io->stdOut);
+	} else {
+		CLS1_SendStatusStr((unsigned char*)"  on",
+				   (unsigned char*)"no\r\n",
+				   io->stdOut);
+	}
+
+	sprintf(rpm_message, "%i\r\n", BLDC_rpm);
+	CLS1_SendStatusStr((unsigned char*)"  RPM",
+			   (unsigned char*)rpm_message,
+			   io->stdOut);
+
+	return ERR_OK;
+}
+
+static uint8_t PrintHelp(const CLS1_StdIOType *io)
+{
+	CLS1_SendHelpStr((unsigned char*)"BLDC",
+			 (unsigned char*)"Group of BLDC commands\r\n",
+			 io->stdOut);
+	CLS1_SendHelpStr((unsigned char*)"  help|status",
+			 (unsigned char*)"Print help or status information\r\n",
+			 io->stdOut);
+	CLS1_SendHelpStr((unsigned char*)"  on|off",
+			 (unsigned char*)"Turns it on or off\r\n",
+			 io->stdOut);
+	CLS1_SendHelpStr((unsigned char*)"  setrpm n",
+			 (unsigned char*)"Sets RPM to n\r\n",
+			 io->stdOut);
+	CLS1_SendHelpStr((unsigned char*)"  reset",
+			 (unsigned char*)"Reset to initial setup\r\n",
+			 io->stdOut);
+	CLS1_SendHelpStr((unsigned char*)"  init",
+			 (unsigned char*)"Initialize motor-control\r\n",
+			 io->stdOut);
+	return ERR_OK;
+}
+
+byte BLDC_ParseCommand(const unsigned char *cmd,
+		       bool *handled,
+		       const CLS1_StdIOType *io)
+{
+	uint8_t res = ERR_OK;
+	unsigned char message[64] = { '\0'};
+	int32_t val;
+	const unsigned char *p;
+
+	if (UTIL1_strcmp((char*)cmd, CLS1_CMD_HELP) == 0
+	    || UTIL1_strcmp((char*)cmd, "BLDC help") == 0) {
+		*handled = TRUE;
+		return PrintHelp(io);
+	} else if ((UTIL1_strcmp((char*)cmd, CLS1_CMD_STATUS) == 0)
+		   || (UTIL1_strcmp((char*)cmd, "BLDC status") == 0)) {
+		*handled = TRUE;
+		return PrintStatus(io);
+	} else if (UTIL1_strcmp((char*)cmd, "BLDC on") == 0) {
+		*handled = TRUE;
+		BLDC_set_enable(1);
+		return ERR_OK;
+	} else if (UTIL1_strcmp((char*)cmd, "BLDC off") == 0) {
+		*handled = TRUE;
+		BLDC_set_enable(0);
+		return ERR_OK;
+	} else if (UTIL1_strcmp((char*)cmd, "BLDC reset") == 0) {
+		*handled = TRUE;
+		BLDC_reset();
+	} else if (UTIL1_strncmp((char*)cmd, "BLDC setrpm ",
+				 sizeof("BLDC setrpm")-1) == 0) {
+		if (!BLDC_enable) {
+			CLS1_SendStr((unsigned char*)"BLDC is off, cannot set RPM\r\n",
+				     io->stdErr);
+			res = ERR_FAILED;
+		} else {
+			p = cmd+sizeof("BLDC setrpm");
+			if (UTIL1_xatoi(&p, &val) == ERR_OK
+			    && val >= BLDC_RPM_MIN && val <= BLDC_RPM_MAX) {
+				BLDC_set_rpm(val);
+				*handled = TRUE;
+			} else {
+				sprintf(message,
+					"Wrong argument, must be in range %i to %i",
+					BLDC_RPM_MIN, BLDC_RPM_MAX);
+				CLS1_SendStr((unsigned char*)message,
+					     io->stdErr);
+			}
+		}
+	} else if (UTIL1_strcmp((char*)cmd, "BLDC init") == 0) {
+		*handled = TRUE;
+		BLDC_init(io);
+	}
+	return ERR_OK;
 }
 
 int BLDC_get_enable(void)
@@ -139,17 +173,15 @@ static void BLDC_set_rpm(int rpm)
 static void BLDC_init(const CLS1_StdIOType *io)
 {
 	int i = 0;
-	unsigned char message[32] = { '\0' };
 
 	set_status(STATUS_BUSY);
 
 	CLS1_SendStr((unsigned char*)"initializing BLDC ...\r\n", io->stdOut);
 	for (i = 0; i < 1.5*BLDC_RPM_MAX; i+=100) {
 		WAIT1_Waitms(10);
-		// sprintf(message, "PWM ratio = %i\r\n", BLDC_PWM_ratio);
-		// CLS1_SendStr((unsigned char*)message, io->stdOut);
 		BLDC_PWM_ratio = get_pwm_ratio(i) - BLDC_PWM_MIN;
 	}
+
 	BLDC_PWM_ratio = get_pwm_ratio(BLDC_RPM_MIN);
 
 	set_status(STATUS_OK);
@@ -159,7 +191,8 @@ static void BLDC_init(const CLS1_StdIOType *io)
 
 static int get_pwm_ratio(int rpm)
 {
-	return ((BLDC_PWM_MAX-BLDC_PWM_MIN)/(float)BLDC_RPM_MAX)*rpm + BLDC_PWM_MIN;
+	return ((BLDC_PWM_MAX - BLDC_PWM_MIN) / (float)BLDC_RPM_MAX)*rpm
+		+ BLDC_PWM_MIN;
 }
 
 void BLDC_reset(void)

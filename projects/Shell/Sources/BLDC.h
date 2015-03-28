@@ -2,7 +2,7 @@
  * BLDC.h
  *
  *  Created on: Mar 7, 2015
- *      Author: Nino
+ *      Author: Ninux
  */
 
 #ifndef BLDC_H_
@@ -28,9 +28,12 @@
 #define BLDC_PWM_MIN 3276
 #define BLDC_PWM_MAX 6554
 
-#define BLDC_PARSE_COMMAND_ENABLED  1 /* set to 1 if method ParseCommand() is present, 0 otherwise */
+#define BLDC_PARSE_COMMAND_ENABLED 1 /* set to 1 if method ParseCommand()
+					is present, 0 otherwise */
 
-byte BLDC_ParseCommand(const unsigned char *cmd, bool *handled, const CLS1_StdIOType *io);
+byte BLDC_ParseCommand(const unsigned char *cmd,
+		       bool *handled,
+		       const CLS1_StdIOType *io);
 
 int BLDC_get_enable(void);
 
