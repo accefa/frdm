@@ -1,10 +1,10 @@
+#!/bin/python
+
 ################################################################################
 # accefa
 #
 # author: ninux (nino.ninux@gmail.com)
 ################################################################################
-
-#!/bin/python
 
 def checkCommand(cmd, show):
     if (show):
@@ -27,6 +27,14 @@ import serial
 import time
 from time import sleep
 import sys
+import curses
+
+# check arguments
+show = False
+if len(sys.argv) == 2:
+    opt = str(sys.argv)
+    if str(sys.argv[1]) == "-s":
+        show = True
 
 # configure the serial interface
 device = "/dev/ttyACM0"
@@ -43,12 +51,19 @@ else:
     sys.exit()
 
 # define command list
-commands = ["help", "status", "BLDC help",
-            "BLDC status", "BLDC init", "BLDC reset"]
+cmd_CLS1 = ["help", "status"]
+cmd_BLDC = ["BLDC help", "BLDC status", "BLDC on", "BLDC off", 
+    "BLDC setrpm 0", "BLDC reset", "BLDC init"]
+cmd_STP = ["STP help", "STP status", "STP on", "STP off", "STP move 0",
+    "STP reset"]
+cmd_DC = ["DC help", "DC status", "DC on", "DC off", "DC up", "DC down",
+    "DC setpwm 0", "DC reset"]
 
-for item in commands:
+cmd_all = cmd_CLS1 + cmd_BLDC + cmd_STP + cmd_DC
+
+for item in cmd_all:
     print("executing \"" + item + "\" ...")
-    checkCommand(item, False)
+    checkCommand(item, show)
 
 # close the serial interface
 ser.close()
