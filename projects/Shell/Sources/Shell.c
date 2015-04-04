@@ -14,6 +14,8 @@
 #include "Error.h"
 #include "BLDC.h"
 #include "WAIT1.h"
+#include "STP.h"
+#include "DC.h"
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
@@ -26,6 +28,12 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #endif
 #if BLDC_PARSE_COMMAND_ENABLED
 		BLDC_ParseCommand,
+#endif
+#if STP_PARSE_COMMAND_ENABLED
+		STP_ParseCommand,
+#endif
+#if DC_PARSE_COMMAND_ENABLED
+		DC_ParseCommand,
 #endif
 		NULL
 };

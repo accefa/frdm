@@ -52,7 +52,7 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io)
 				   (unsigned char*)"yes\r\n",
 				   io->stdOut);
 	} else {
-		CLS1_SendStatusStr((unsigned char*)"  on",
+		CLS1_SendStatusStr((unsigned char*)"  off",
 				   (unsigned char*)"no\r\n",
 				   io->stdOut);
 	}
@@ -68,23 +68,29 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io)
 static uint8_t PrintHelp(const CLS1_StdIOType *io)
 {
 	CLS1_SendHelpStr((unsigned char*)"BLDC",
-			 (unsigned char*)"Group of BLDC commands\r\n",
+			 (unsigned char*)"group of BLDC commands\r\n",
 			 io->stdOut);
+
 	CLS1_SendHelpStr((unsigned char*)"  help|status",
-			 (unsigned char*)"Print help or status information\r\n",
+			 (unsigned char*)"print help or status information\r\n",
 			 io->stdOut);
+
 	CLS1_SendHelpStr((unsigned char*)"  on|off",
-			 (unsigned char*)"Turns it on or off\r\n",
+			 (unsigned char*)"turns it on or off\r\n",
 			 io->stdOut);
+
 	CLS1_SendHelpStr((unsigned char*)"  setrpm n",
-			 (unsigned char*)"Sets RPM to n\r\n",
+			 (unsigned char*)"sets RPM to n\r\n",
 			 io->stdOut);
+
 	CLS1_SendHelpStr((unsigned char*)"  reset",
-			 (unsigned char*)"Reset to initial setup\r\n",
+			 (unsigned char*)"reset to initial setup\r\n",
 			 io->stdOut);
+
 	CLS1_SendHelpStr((unsigned char*)"  init",
-			 (unsigned char*)"Initialize motor-control\r\n",
+			 (unsigned char*)"initialize motor-control\r\n",
 			 io->stdOut);
+
 	return ERR_OK;
 }
 
