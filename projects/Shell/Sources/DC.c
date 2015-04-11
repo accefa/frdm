@@ -29,8 +29,8 @@
 
 #include "DC.h"
 
-static bool dc_top = 1;
-static bool dc_bot = 1;
+static bool dc_top = DC_TOP_REACHED;
+static bool dc_bot = DC_BOT_REACHED;
 
 static uint8_t PrintStatus(const CLS1_StdIOType *io)
 {
@@ -54,6 +54,26 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io)
 	} else {
 		CLS1_SendStatusStr((unsigned char*)"  direction",
 				(unsigned char*)"down\r\n",
+				io->stdOut);
+	}
+
+	if (DC_get_top() == DC_TOP_REACHED) {
+		CLS1_SendStatusStr((unsigned char*)"  top-limit",
+				(unsigned char*)"reached\r\n",
+				io->stdOut);
+	} else {
+		CLS1_SendStatusStr((unsigned char*)"  top-limit",
+				(unsigned char*)"free\r\n",
+				io->stdOut);
+	}
+
+	if (DC_get_bot() == DC_TOP_REACHED) {
+		CLS1_SendStatusStr((unsigned char*)"  bot-limit",
+				(unsigned char*)"reached\r\n",
+				io->stdOut);
+	} else {
+		CLS1_SendStatusStr((unsigned char*)"  bot-limit",
+				(unsigned char*)"free\r\n",
 				io->stdOut);
 	}
 
