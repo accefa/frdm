@@ -20,24 +20,41 @@
 #include "Error.h"
 #include <string.h>
 #include <stdio.h>
+#include "DC_DIR.h"
+#include "DC_SRC.h"
+#include "DC_EN.h"
+#include "DC_HWRST.h"
+#include "DC_FF1.h"
+#include "DC_FF2.h"
 
 #include "DC.h"
 
-static int DC_enable = 0;
+static bool dc_top = 1;
+static bool dc_bot = 1;
 
 static uint8_t PrintStatus(const CLS1_StdIOType *io)
 {
 	CLS1_SendStatusStr((unsigned char*)"DC",
 			   (unsigned char*)"\r\n", io->stdOut);
 
-	if (DC_get_enable() != 0) {
+	if (DC_get_en() == DC_EN_ON) {
 		CLS1_SendStatusStr((unsigned char*)"  on",
-				   (unsigned char*)"yes\r\n",
-				   io->stdOut);
+				(unsigned char*)"yes\r\n",
+				io->stdOut);
 	} else {
-		CLS1_SendStatusStr((unsigned char*)"  off",
-				   (unsigned char*)"no\r\n",
-				   io->stdOut);
+		CLS1_SendStatusStr((unsigned char*)"  on",
+				(unsigned char*)"no\r\n",
+				io->stdOut);
+	}
+
+	if (DC_get_dir() == DC_DIR_UP) {
+		CLS1_SendStatusStr((unsigned char*)"  direction",
+				(unsigned char*)"up\r\n",
+				io->stdOut);
+	} else {
+		CLS1_SendStatusStr((unsigned char*)"  direction",
+				(unsigned char*)"down\r\n",
+				io->stdOut);
 	}
 
 	return ERR_OK;
@@ -60,10 +77,11 @@ static uint8_t PrintHelp(const CLS1_StdIOType *io)
 	CLS1_SendHelpStr((unsigned char*)"  up|down",
 			 (unsigned char*)"sets the direction to up or down\r\n",
 			 io->stdOut);
-
+#ifndef DC_PWM_SOURCE_INTERNAL
 	CLS1_SendHelpStr((unsigned char*)"  setpwm n",
 			 (unsigned char*)"sets the PWM value to n\r\n",
 			 io->stdOut);
+#endif
 
 	CLS1_SendHelpStr((unsigned char*)"  reset",
 			 (unsigned char*)"reset to initial setup\r\n",
@@ -91,40 +109,46 @@ byte DC_ParseCommand(const unsigned char *cmd,
 		return PrintStatus(io);
 	} else if (UTIL1_strcmp((char*)cmd, "DC on") == 0) {
 		*handled = TRUE;
-		// todo
+		DC_set_en(DC_EN_ON);
 		return ERR_OK;
 	} else if (UTIL1_strcmp((char*)cmd, "DC off") == 0) {
 		*handled = TRUE;
-		// todo
+		DC_set_en(DC_EN_OFF);
 		return ERR_OK;
 	} else if (UTIL1_strcmp((char*)cmd, "DC up") == 0) {
-			*handled = TRUE;
-			// todo
-			return ERR_OK;
+		*handled = TRUE;
+		DC_set_dir(DC_DIR_UP);
+		return ERR_OK;
 	} else if (UTIL1_strcmp((char*)cmd, "DC down") == 0) {
-				*handled = TRUE;
-				// todo
-				return ERR_OK;
+		*handled = TRUE;
+		DC_set_dir(DC_DIR_UP);
+		return ERR_OK;
 	} else if (UTIL1_strncmp((char*)cmd, "DC setpwm ",
-					 sizeof("DC setpwm")-1) == 0) {
-			if (!DC_enable) {
-				CLS1_SendStr((unsigned char*)"DC is off, cannot setpwm\r\n",
-					     io->stdErr);
-				res = ERR_FAILED;
-			} else {
-				p = cmd+sizeof("DC setpwm");
-				if (UTIL1_xatoi(&p, &val) == ERR_OK
-				    && val >= BLDC_RPM_MIN && val <= BLDC_RPM_MAX) {
-					// todo
-					*handled = TRUE;
-				} else {
-					sprintf(message,
-						"Wrong argument, must be in range %i to %i",
-						DC_PWM_MIN, DC_PWM_MAX);
-					CLS1_SendStr((unsigned char*)message,
+			sizeof("DC setpwm")-1) == 0) {
+#ifdef DC_PWM_SOURCE_INTERNAL
+		CLS1_SendStr((unsigned char*)"PWM is set by hardware\r\n",
 						     io->stdErr);
-				}
+		*handled = TRUE;
+#else
+		if (!DC_get_en()) {
+			CLS1_SendStr((unsigned char*)"DC is off, cannot setpwm\r\n",
+				     io->stdErr);
+			res = ERR_FAILED;
+		} else {
+			p = cmd+sizeof("DC setpwm");
+			if (UTIL1_xatoi(&p, &val) == ERR_OK
+			    && val >= BLDC_RPM_MIN && val <= BLDC_RPM_MAX) {
+				// todo
+				*handled = TRUE;
+			} else {
+				sprintf(message,
+					"Wrong argument, must be in range %i to %i",
+					DC_PWM_MIN, DC_PWM_MAX);
+				CLS1_SendStr((unsigned char*)message,
+					     io->stdErr);
 			}
+		}
+#endif
 	} else if (UTIL1_strcmp((char*)cmd, "DC reset") == 0) {
 		*handled = TRUE;
 		// todo
@@ -135,7 +159,103 @@ byte DC_ParseCommand(const unsigned char *cmd,
 	return ERR_OK;
 }
 
-int DC_get_enable(void)
+int DC_get_dir(void)
 {
-	return DC_enable;
+	return DC_DIR_GetVal();
+}
+
+int DC_set_dir(bool dir)
+{
+	DC_DIR_PutVal(dir);
+	return 0;
+}
+
+int DC_get_src(void)
+{
+	DC_SRC_GetVal();
+	return 0;
+}
+
+int DC_set_src(bool src)
+{
+	DC_SRC_PutVal(src);
+	return 0;
+}
+
+int DC_get_en(void)
+{
+	return DC_EN_GetVal();
+}
+
+int DC_set_en(bool en)
+{
+	DC_set_bot(DC_BOT_FREE);
+	DC_set_top(DC_BOT_FREE);
+	DC_EN_PutVal(en);
+	return 0;
+}
+
+int DC_get_hwrst(void)
+{
+	return DC_HWRST_GetVal();
+}
+
+int DC_set_hwrst(bool hwrst)
+{
+	DC_HWRST_PutVal(hwrst);
+	return 0;
+}
+
+int DC_get_ff1(void)
+{
+	return DC_FF1_GetVal();
+}
+
+int DC_get_ff2(void)
+{
+	return DC_FF2_GetVal();
+}
+
+#ifndef DC_PWM_SOURCE_INTERNAL
+int DC_get_PWM(void)
+{
+	// will not be implemented!
+	return 0;
+}
+
+int DC_set_PWM(void)
+{
+	// will not be implemented!
+	return 0;
+}
+#endif
+
+bool DC_get_top(void)
+{
+	return dc_top;
+}
+
+bool DC_set_top(bool status)
+{
+	if (status) {
+		set_status(STATUS_ERROR);
+	} else {
+		set_status(STATUS_OK);
+	}
+	return dc_top = status;
+}
+
+bool DC_get_bot(void)
+{
+	return dc_bot;
+}
+
+bool DC_set_bot(bool status)
+{
+	if (status) {
+		set_status(STATUS_ERROR);
+	} else {
+		set_status(STATUS_OK);
+	}
+	return dc_bot = status;
 }

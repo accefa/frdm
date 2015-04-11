@@ -36,7 +36,7 @@ static uint8_t PrintStatus(const CLS1_StdIOType *io)
 				   (unsigned char*)"yes\r\n",
 				   io->stdOut);
 	} else {
-		CLS1_SendStatusStr((unsigned char*)"  off",
+		CLS1_SendStatusStr((unsigned char*)"  on",
 				   (unsigned char*)"no\r\n",
 				   io->stdOut);
 	}

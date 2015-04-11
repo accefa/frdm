@@ -51,11 +51,28 @@
 #include "CS1.h"
 #include "AS1.h"
 #include "ASerialLdd1.h"
-#include "RxBuf1.h"
 #include "PWM1.h"
 #include "PwmLdd2.h"
 #include "SM1.h"
 #include "SMasterLdd1.h"
+#include "DC_DIR.h"
+#include "BitIoLdd4.h"
+#include "DC_SRC.h"
+#include "BitIoLdd5.h"
+#include "DC_EN.h"
+#include "BitIoLdd6.h"
+#include "DC_HWRST.h"
+#include "BitIoLdd7.h"
+#include "DC_FF1.h"
+#include "BitIoLdd8.h"
+#include "DC_FF2.h"
+#include "BitIoLdd9.h"
+#include "DC_TOP.h"
+#include "ExtIntLdd1.h"
+#include "DC_BOT.h"
+#include "ExtIntLdd2.h"
+#include "STP_REF.h"
+#include "ExtIntLdd3.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -271,6 +288,48 @@ void SM1_OnError(void);
 **         using <GetError> method.
 **         The event is available only when the <Interrupt
 **         service/event> property is enabled.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void DC_BOT_OnInterrupt(void);
+/*
+** ===================================================================
+**     Event       :  DC_BOT_OnInterrupt (module Events)
+**
+**     Component   :  DC_BOT [ExtInt]
+**     Description :
+**         This event is called when an active signal edge/level has
+**         occurred.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void DC_TOP_OnInterrupt(void);
+/*
+** ===================================================================
+**     Event       :  DC_TOP_OnInterrupt (module Events)
+**
+**     Component   :  DC_TOP [ExtInt]
+**     Description :
+**         This event is called when an active signal edge/level has
+**         occurred.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void STP_REF_OnInterrupt(void);
+/*
+** ===================================================================
+**     Event       :  STP_REF_OnInterrupt (module Events)
+**
+**     Component   :  STP_REF [ExtInt]
+**     Description :
+**         This event is called when an active signal edge/level has
+**         occurred.
 **     Parameters  : None
 **     Returns     : Nothing
 ** ===================================================================

@@ -36,6 +36,7 @@ extern "C" {
 
 
 /* User includes (#include below this line is not maintained by Processor Expert) */
+#include "DC.h"
 
 /*
 ** ===================================================================
@@ -307,6 +308,67 @@ void SM1_OnFreeTxBuf(void)
 ** ===================================================================
 */
 void SM1_OnError(void)
+{
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  DC_BOT_OnInterrupt (module Events)
+**
+**     Component   :  DC_BOT [ExtInt]
+**     Description :
+**         This event is called when an active signal edge/level has
+**         occurred.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void DC_BOT_OnInterrupt(void)
+{
+	// turn off the DC motor and change the direction
+	DC_set_en(DC_EN_OFF);
+	DC_set_dir(DC_DIR_UP);
+
+	// set the status
+	DC_set_bot(DC_BOT_REACHED);
+}
+
+/*
+** ===================================================================
+**     Event       :  DC_TOP_OnInterrupt (module Events)
+**
+**     Component   :  DC_TOP [ExtInt]
+**     Description :
+**         This event is called when an active signal edge/level has
+**         occurred.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void DC_TOP_OnInterrupt(void)
+{
+	// turn off the DC motor and change the direction
+	DC_set_en(DC_EN_OFF);
+	DC_set_dir(DC_DIR_DOWN);
+
+	// set the status
+	DC_set_top(DC_TOP_REACHED);
+}
+
+/*
+** ===================================================================
+**     Event       :  STP_REF_OnInterrupt (module Events)
+**
+**     Component   :  STP_REF [ExtInt]
+**     Description :
+**         This event is called when an active signal edge/level has
+**         occurred.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void STP_REF_OnInterrupt(void)
 {
   /* Write your code here ... */
 }
