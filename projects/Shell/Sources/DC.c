@@ -141,7 +141,7 @@ byte DC_ParseCommand(const unsigned char *cmd,
 		return ERR_OK;
 	} else if (UTIL1_strcmp((char*)cmd, "DC down") == 0) {
 		*handled = TRUE;
-		DC_set_dir(DC_DIR_UP);
+		DC_set_dir(DC_DIR_DOWN);
 		return ERR_OK;
 	} else if (UTIL1_strncmp((char*)cmd, "DC setpwm ",
 			sizeof("DC setpwm")-1) == 0) {
@@ -186,7 +186,11 @@ int DC_get_dir(void)
 
 int DC_set_dir(bool dir)
 {
-	DC_DIR_PutVal(dir);
+	if (dir == DC_DIR_UP) {
+		DC_DIR_PutVal(DC_DIR_UP);
+	} else {
+		DC_DIR_PutVal(DC_DIR_DOWN);
+	}
 	return 0;
 }
 
@@ -209,9 +213,13 @@ int DC_get_en(void)
 
 int DC_set_en(bool en)
 {
-	DC_set_bot(DC_BOT_FREE);
-	DC_set_top(DC_BOT_FREE);
-	DC_EN_PutVal(en);
+	if (en == DC_EN_ON) {
+		DC_set_bot(DC_BOT_FREE);
+		DC_set_top(DC_BOT_FREE);
+		DC_EN_PutVal(DC_EN_ON);
+	} else {
+		DC_EN_PutVal(DC_EN_OFF);
+	}
 	return 0;
 }
 

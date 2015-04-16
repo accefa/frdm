@@ -3,8 +3,8 @@
   <Header>
     <Name>Shell</Name>
     <SavedBy>Nino</SavedBy>
-    <ModificationStamp>41</ModificationStamp>
-    <Date>2015-04-11</Date>
+    <ModificationStamp>44</ModificationStamp>
+    <Date>2015-04-12</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.10.0.RT6_b1428-0121</PEversion>
   </Header>
@@ -29,7 +29,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>79</ProjectCompNumb>
+    <ProjectCompNumb>82</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>
@@ -19667,7 +19667,7 @@
         <ItemSymbol>_Pin</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>PTE0/UART1_TX/RTC_CLKOUT/CMP0_OUT/I2C1_SDA</Value>
+        <Value>ADC0_DM0/ADC0_SE4a/PTE21/TPM1_CH1/UART0_RX</Value>
         <SharedPrphMode>false</SharedPrphMode>
       </ItemState>
       <ItemState>
@@ -19710,7 +19710,7 @@
               <ItemSymbol>_Pin</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <Value>PTE0/UART1_TX/RTC_CLKOUT/CMP0_OUT/I2C1_SDA</Value>
+              <Value>ADC0_DM0/ADC0_SE4a/PTE21/TPM1_CH1/UART0_RX</Value>
               <SharedPrphMode>false</SharedPrphMode>
             </ItemState>
             <ItemState>
@@ -20837,7 +20837,7 @@
         <ItemSymbol>_Pin</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>PTE2/SPI1_SCK</Value>
+        <Value>ADC0_DM3/ADC0_SE7a/PTE23/TPM2_CH1/UART2_RX</Value>
         <SharedPrphMode>false</SharedPrphMode>
       </ItemState>
       <ItemState>
@@ -20880,7 +20880,7 @@
               <ItemSymbol>_Pin</ItemSymbol>
               <ReadOnly>false</ReadOnly>
               <UserReadOnly>false</UserReadOnly>
-              <Value>PTE2/SPI1_SCK</Value>
+              <Value>ADC0_DM3/ADC0_SE7a/PTE23/TPM2_CH1/UART2_RX</Value>
               <SharedPrphMode>false</SharedPrphMode>
             </ItemState>
             <ItemState>
