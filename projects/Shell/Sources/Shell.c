@@ -16,6 +16,7 @@
 #include "WAIT1.h"
 #include "STP.h"
 #include "DC.h"
+#include "../../../../../pren-et/stepper/driver/drv/l6480.h"
 
 static const CLS1_ParseCommandCallback CmdParserTable[] =
 {
@@ -35,6 +36,7 @@ static const CLS1_ParseCommandCallback CmdParserTable[] =
 #if DC_PARSE_COMMAND_ENABLED
 		DC_ParseCommand,
 #endif
+		l6480_ParseCommand,
 		NULL
 };
 
@@ -69,4 +71,8 @@ void SHELL_Init(void)
 		}
 	}
 	set_status(STATUS_OK);
+}
+
+void shellSendDone(){
+	 CLS1_SendStr((unsigned char*)"job done\r\n", CLS1_GetStdio()->stdErr);
 }

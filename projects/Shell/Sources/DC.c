@@ -21,11 +21,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "DC_DIR.h"
-#include "DC_SRC.h"
 #include "DC_EN.h"
-#include "DC_HWRST.h"
-#include "DC_FF1.h"
-#include "DC_FF2.h"
 
 #include "DC.h"
 
@@ -194,18 +190,6 @@ int DC_set_dir(bool dir)
 	return 0;
 }
 
-int DC_get_src(void)
-{
-	DC_SRC_GetVal();
-	return 0;
-}
-
-int DC_set_src(bool src)
-{
-	DC_SRC_PutVal(src);
-	return 0;
-}
-
 int DC_get_en(void)
 {
 	return DC_EN_GetVal();
@@ -223,26 +207,6 @@ int DC_set_en(bool en)
 	return 0;
 }
 
-int DC_get_hwrst(void)
-{
-	return DC_HWRST_GetVal();
-}
-
-int DC_set_hwrst(bool hwrst)
-{
-	DC_HWRST_PutVal(hwrst);
-	return 0;
-}
-
-int DC_get_ff1(void)
-{
-	return DC_FF1_GetVal();
-}
-
-int DC_get_ff2(void)
-{
-	return DC_FF2_GetVal();
-}
 
 #ifndef DC_PWM_SOURCE_INTERNAL
 int DC_get_PWM(void)

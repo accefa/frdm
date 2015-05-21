@@ -373,6 +373,57 @@ void STP_REF_OnInterrupt(void)
   /* Write your code here ... */
 }
 
+/*
+** ===================================================================
+**     Event       :  STP_BSY_OnInterrupt (module Events)
+**
+**     Component   :  STP_BSY [ExtInt]
+**     Description :
+**         This event is called when an active signal edge/level has
+**         occurred.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void STP_BSY_OnInterrupt(void)
+{
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  Stepperspi_OnRxChar (module Events)
+**
+**     Component   :  Stepperspi [SynchroMaster]
+**     Description :
+**         This event is called after a correct character is received.
+**         The event is available only when the <Interrupt
+**         service/event> property is enabled.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void Stepperspi_OnRxChar(void)
+{
+  /* Write your code here ... */
+}
+
+/*
+** ===================================================================
+**     Event       :  Stepperspi_OnTxChar (module Events)
+**
+**     Component   :  Stepperspi [SynchroMaster]
+**     Description :
+**         This event is called after a character is transmitted.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+void Stepperspi_OnTxChar(void)
+{
+  /* Write your code here ... */
+}
+
 /* END Events */
 
 #ifdef __cplusplus

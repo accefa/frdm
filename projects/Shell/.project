@@ -32,6 +32,11 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>Sources/STEPPER_DRV_LOC</name>
+			<type>2</type>
+			<locationURI>STEPPER_DRV_LOC/drv</locationURI>
+		</link>
+		<link>
 			<name>Static_Code/IO_Map/MKL25Z4.h</name>
 			<type>1</type>
 			<location>C:/Freescale/KDS_1.1.1/eclipse/ProcessorExpert/lib/Kinetis/iofiles/MKL25Z4.h</location>
@@ -147,4 +152,10 @@
 			<location>C:/Freescale/KDS_1.1.1/eclipse/ProcessorExpert/lib/Kinetis/pdd/inc/USB_PDD.h</location>
 		</link>
 	</linkedResources>
+	<variableList>
+		<variable>
+			<name>STEPPER_DRV_LOC</name>
+			<value>$%7BPARENT-4-PROJECT_LOC%7D/pren-et/stepper/driver</value>
+		</variable>
+	</variableList>
 </projectDescription>

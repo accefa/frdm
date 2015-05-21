@@ -57,22 +57,18 @@
 #include "SMasterLdd1.h"
 #include "DC_DIR.h"
 #include "BitIoLdd4.h"
-#include "DC_SRC.h"
-#include "BitIoLdd5.h"
 #include "DC_EN.h"
 #include "BitIoLdd6.h"
-#include "DC_HWRST.h"
-#include "BitIoLdd7.h"
-#include "DC_FF1.h"
-#include "BitIoLdd8.h"
-#include "DC_FF2.h"
-#include "BitIoLdd9.h"
 #include "DC_TOP.h"
 #include "ExtIntLdd1.h"
 #include "DC_BOT.h"
 #include "ExtIntLdd2.h"
 #include "STP_REF.h"
 #include "ExtIntLdd3.h"
+#include "Stepperspi.h"
+#include "SMasterLdd2.h"
+#include "STP_BSY.h"
+#include "ExtIntLdd4.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -330,6 +326,48 @@ void STP_REF_OnInterrupt(void);
 **     Description :
 **         This event is called when an active signal edge/level has
 **         occurred.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void STP_BSY_OnInterrupt(void);
+/*
+** ===================================================================
+**     Event       :  STP_BSY_OnInterrupt (module Events)
+**
+**     Component   :  STP_BSY [ExtInt]
+**     Description :
+**         This event is called when an active signal edge/level has
+**         occurred.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void Stepperspi_OnRxChar(void);
+/*
+** ===================================================================
+**     Event       :  Stepperspi_OnRxChar (module Events)
+**
+**     Component   :  Stepperspi [SynchroMaster]
+**     Description :
+**         This event is called after a correct character is received.
+**         The event is available only when the <Interrupt
+**         service/event> property is enabled.
+**     Parameters  : None
+**     Returns     : Nothing
+** ===================================================================
+*/
+
+void Stepperspi_OnTxChar(void);
+/*
+** ===================================================================
+**     Event       :  Stepperspi_OnTxChar (module Events)
+**
+**     Component   :  Stepperspi [SynchroMaster]
+**     Description :
+**         This event is called after a character is transmitted.
 **     Parameters  : None
 **     Returns     : Nothing
 ** ===================================================================

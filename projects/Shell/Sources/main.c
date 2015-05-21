@@ -53,22 +53,18 @@
 #include "SMasterLdd1.h"
 #include "DC_DIR.h"
 #include "BitIoLdd4.h"
-#include "DC_SRC.h"
-#include "BitIoLdd5.h"
 #include "DC_EN.h"
 #include "BitIoLdd6.h"
-#include "DC_HWRST.h"
-#include "BitIoLdd7.h"
-#include "DC_FF1.h"
-#include "BitIoLdd8.h"
-#include "DC_FF2.h"
-#include "BitIoLdd9.h"
 #include "DC_TOP.h"
 #include "ExtIntLdd1.h"
 #include "DC_BOT.h"
 #include "ExtIntLdd2.h"
 #include "STP_REF.h"
 #include "ExtIntLdd3.h"
+#include "Stepperspi.h"
+#include "SMasterLdd2.h"
+#include "STP_BSY.h"
+#include "ExtIntLdd4.h"
 /* Including shared modules, which are used for whole project */
 #include "PE_Types.h"
 #include "PE_Error.h"
@@ -79,6 +75,8 @@
 #include "Shell.h"
 #include "Error.h"
 #include "BLDC.h"
+
+#include "../../../../../pren-et/stepper/driver/drv/l6480.h"
 
 static void Task1(void *pvParameters)
 {

@@ -22,6 +22,7 @@
 #include <stdio.h>
 
 #include "STP.h"
+#include "../../../../../pren-et/stepper/driver/drv/l6480.h"
 
 static int STP_enable = 0;
 
@@ -88,15 +89,15 @@ byte STP_ParseCommand(const unsigned char *cmd,
 		return PrintStatus(io);
 	} else if (UTIL1_strcmp((char*)cmd, "STP on") == 0) {
 		*handled = TRUE;
-		// todo
+		STP_en(STP_EN_ON);
 		return ERR_OK;
 	} else if (UTIL1_strcmp((char*)cmd, "STP off") == 0) {
 		*handled = TRUE;
-		// todo
+		STP_en(STP_EN_OFF);
 		return ERR_OK;
 	} else if (UTIL1_strcmp((char*)cmd, "STP reset") == 0) {
 		*handled = TRUE;
-		// todo
+		STP_reset();
 	} else if (UTIL1_strncmp((char*)cmd, "STP move ",
 				 sizeof("STP move")-1) == 0) {
 		if (!STP_enable) {
@@ -105,9 +106,8 @@ byte STP_ParseCommand(const unsigned char *cmd,
 			res = ERR_FAILED;
 		} else {
 			p = cmd+sizeof("STP move");
-			if (UTIL1_xatoi(&p, &val) == ERR_OK
-			    && val >= BLDC_RPM_MIN && val <= BLDC_RPM_MAX) {
-				// todo
+			if (UTIL1_xatoi(&p, &val) == ERR_OK) {
+				STP_move(val);
 				*handled = TRUE;
 			} else {
 				sprintf(message,
@@ -129,12 +129,24 @@ int STP_get_enable(void)
 	return STP_enable;
 }
 
-void spi_write(uint8_t* data)
+void STP_move(int steps)
 {
-	return;
+	if (steps < 0) {
+		l6480_cmd_move(L6480_DIR_REV, (-1)*steps);
+	} else {
+		l6480_cmd_move(L6480_DIR_FWD, steps);
+	}
 }
 
-void spi_read(uint8_t* data)
+void STP_en(int status)
 {
-	return;
+	STP_enable = status;
+}
+
+void STP_reset(void)
+{
+	l6480_set_kval_run(128);
+	l6480_set_kval_acc(128);
+	l6480_set_kval_dec(128);
+	STP_en(STP_EN_OFF);
 }
